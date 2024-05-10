@@ -5,9 +5,9 @@ import javazoom.jl.player.advanced.PlaybackListener;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.Objects;
 
 public class MusicPlayer {
-    private static final Object playSignal = new Object();
     PlaybackListener playbackListener=new PlaybackListener() {
         @Override
         public void playbackFinished(PlaybackEvent evt) {
@@ -16,16 +16,15 @@ public class MusicPlayer {
             System.out.println("Playback finished");
 
         }
-    };;
+    };
     Boolean isPlaying;
     int pausePosition;
-    int currenttimeinsec;
+    int currentTimeInSec;
     int currentFrame;
     boolean songFinished;
     long sysTimeInS;
     long timeWhenSongStarts;
     long timeWhenSongPaused;
-    long timeWhenSongResumes;
     FileInputStream inputStream;
     BufferedInputStream bufferedInputStream;
     long seek;
@@ -39,7 +38,7 @@ public class MusicPlayer {
     boolean NewSongSelected;
     private Song SongNowPlaying;
     public String songpath="F:/ideaProjects/untitled1/songs/redrum.mp3";
-    private Music_interface musicInterface;
+    private final Music_interface musicInterface;
     public MusicPlayer(Music_interface musicInterface)
     {
         this.musicInterface = musicInterface;
@@ -47,7 +46,7 @@ public class MusicPlayer {
         NewSongSelected=false;
         songFinished=false;
         sysTimeInS=0;
-        currenttimeinsec =0;
+        currentTimeInSec =0;
     }
 
     AdvancedPlayer advancedPlayer;
@@ -56,23 +55,17 @@ public class MusicPlayer {
     public void updateSliderPosition() {
         new Thread(() -> {
             while (isPlaying) {
-                try {
-                    // Get the current playback position of the song
-                    currenttimeinsec =(int)(timeWhenSongPaused+seek+((System.currentTimeMillis()-timeWhenSongStarts)/1000));
-                    currentFrame =(int) ((double) currenttimeinsec * SongNowPlaying.getFramerate());
-                    if(checkForFinish()){
-                        return;
-                    }
-                    musicInterface.setjLabel1(formatTime((int)((currenttimeinsec))));
-                    // Update the slider position
-                    SwingUtilities.invokeLater(() -> {
-                        musicInterface.Slider.setValue(currentFrame);
-                    });
-                    // Sleep for a short duration to avoid excessive CPU usage
-                    Thread.sleep(500); // Sleep for 1 second
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                // Get the current playback position of the song
+                currentTimeInSec =(int)(timeWhenSongPaused+seek+((System.currentTimeMillis()-timeWhenSongStarts)/1000));
+                currentFrame =(int) ((double) currentTimeInSec * SongNowPlaying.getFramerate());
+                if(checkForFinish()){
+                    return;
                 }
+                musicInterface.setSongTimeLabel(formatTime((currentTimeInSec)));
+                // Update the slider position
+                SwingUtilities.invokeLater(() -> {
+                    musicInterface.Slider.setValue(currentFrame);
+                });
             }
         }).start();
     }
@@ -88,9 +81,9 @@ public class MusicPlayer {
                     currentFrame=0;
                     timeWhenSongPaused=0;
                     seek=0;
-                    currenttimeinsec=0;
-                    musicInterface.setPausePlayIcon((new javax.swing.ImageIcon(getClass().getResource("/play.png"))));
-                    musicInterface.setjLabel1("0:00");
+                    currentTimeInSec =0;
+                    musicInterface.setPausePlayIcon((new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/play.png")))));
+                    musicInterface.setSongTimeLabel("0:00");
                     musicInterface.Slider.setValue(0);
                     return true;
                 }
@@ -99,7 +92,7 @@ public class MusicPlayer {
                 return false;
             }
         }catch(Exception e){
-            System.out.println(e);
+            System.out.println("Exception in checkForFinish method:"+e);
         }
         return false;
     }
@@ -108,14 +101,12 @@ public class MusicPlayer {
     public void playSong () {
         try {
             if (currentFrame > 0) {
-                timeWhenSongResumes=System.currentTimeMillis();
                 if(NewSongSelected){
                     SongNowPlaying=new Song(songpath);
                     currentFrame=0;
                     NewSongSelected=false;
                     seek=0;
                     timeWhenSongPaused=0;
-                    timeWhenSongResumes=0;
                 }
                 timeWhenSongStarts=System.currentTimeMillis();
                 inputStream = new FileInputStream(SongNowPlaying.getpath());
@@ -158,16 +149,16 @@ public class MusicPlayer {
                 updateSliderPosition();
             }
         }catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Exception in playSong method: "+e);
         }
     }
 
     public void pauseSong () {
         try {
             stopSong();
-            timeWhenSongPaused=currenttimeinsec;
+            timeWhenSongPaused= currentTimeInSec;
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Exception occurred in pauseSong method: "+e);
         }
     }
 
@@ -178,7 +169,7 @@ public class MusicPlayer {
             advancedPlayer.close();
             advancedPlayer=null;
         }catch(Exception e){
-            System.out.println(e);
+            System.out.println("Exception occurred in stopSong method: "+e);
         }
     }
 

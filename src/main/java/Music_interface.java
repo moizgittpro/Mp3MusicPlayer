@@ -6,6 +6,7 @@
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.Frame;
+import java.util.Objects;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -16,11 +17,7 @@ public class Music_interface extends javax.swing.JFrame {
 
     JFileChooser filechooser;
     FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 Files", "mp3");
-    private MusicPlayer musicPlayer;
-    public void setNameLabel(String value){
-        NameLabel.setText(value);
-    }
-
+    private final MusicPlayer musicPlayer;
     /**
      * Creates new form Music_interface
      */
@@ -54,8 +51,8 @@ public class Music_interface extends javax.swing.JFrame {
         PausePlay = new javax.swing.JLabel();
         Next = new javax.swing.JLabel();
         Slider = new javax.swing.JSlider();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        songTimeLabel = new javax.swing.JLabel();
+        songTotalTimeLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
 
@@ -188,9 +185,9 @@ public class Music_interface extends javax.swing.JFrame {
                         .addComponent(NameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
         );
 
-        Previous.setIcon(new javax.swing.ImageIcon(getClass().getResource("/back.png"))); // NOI18N
+        Previous.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/back.png")))); // NOI18N
 
-        PausePlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/play.png"))); // NOI18N
+        PausePlay.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/play.png")))); // NOI18N
         PausePlay.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 PausePlayMouseClicked(evt);
@@ -201,15 +198,11 @@ public class Music_interface extends javax.swing.JFrame {
         });
 
         Next.setBackground(new java.awt.Color(102, 102, 102));
-        Next.setIcon(new javax.swing.ImageIcon(getClass().getResource("/next.png"))); // NOI18N
+        Next.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/next.png")))); // NOI18N
 
         Slider.setMinorTickSpacing(10);
         Slider.setSnapToTicks(true);
-        Slider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                SliderStateChanged(evt);
-            }
-        });
+        Slider.addChangeListener(this::SliderStateChanged);
         Slider.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 SliderMouseClicked(evt);
@@ -222,10 +215,10 @@ public class Music_interface extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("0:00");
+        songTimeLabel.setForeground(new java.awt.Color(0, 0, 0));
+        songTimeLabel.setText("0:00");
 
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        songTotalTimeLabel.setForeground(new java.awt.Color(0, 0, 0));
 
         javax.swing.GroupLayout BottomPanelLayout = new javax.swing.GroupLayout(BottomPanel);
         BottomPanel.setLayout(BottomPanelLayout);
@@ -236,7 +229,7 @@ public class Music_interface extends javax.swing.JFrame {
                                         .addComponent(ImagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(NamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)
+                                .addComponent(songTimeLabel)
                                 .addGap(18, 18, 18)
                                 .addGroup(BottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addGroup(BottomPanelLayout.createSequentialGroup()
@@ -247,7 +240,7 @@ public class Music_interface extends javax.swing.JFrame {
                                                 .addComponent(Next))
                                         .addComponent(Slider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel2)
+                                .addComponent(songTotalTimeLabel)
                                 .addGap(0, 0, Short.MAX_VALUE))
         );
         BottomPanelLayout.setVerticalGroup(
@@ -259,8 +252,8 @@ public class Music_interface extends javax.swing.JFrame {
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BottomPanelLayout.createSequentialGroup()
                                                 .addGroup(BottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(Slider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jLabel1)
-                                                        .addComponent(jLabel2))
+                                                        .addComponent(songTimeLabel)
+                                                        .addComponent(songTotalTimeLabel))
                                                 .addGap(18, 18, 18)
                                                 .addGroup(BottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(PausePlay, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -328,12 +321,12 @@ public class Music_interface extends javax.swing.JFrame {
         if(musicPlayer.isPlaying){
             musicPlayer.pauseSong();
             musicPlayer.isPlaying=false;
-            PausePlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/play.png")));
+            PausePlay.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/play.png"))));
         }
         else{
             musicPlayer.playSong();
             musicPlayer.isPlaying=true;
-            PausePlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pause.png")));
+            PausePlay.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/pause.png"))));
         }
 
     }
@@ -347,7 +340,7 @@ public class Music_interface extends javax.swing.JFrame {
         musicPlayer.isPlaying=false;
         musicPlayer.pauseSong();
         musicPlayer.timeWhenSongPaused=0;
-        PausePlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/play.png")));
+        PausePlay.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/play.png"))));
     }
 
     private void SliderMouseReleased(java.awt.event.MouseEvent evt) {
@@ -356,7 +349,7 @@ public class Music_interface extends javax.swing.JFrame {
         musicPlayer.currentFrame=source.getValue();
         musicPlayer.seek =(int)(musicPlayer.currentFrame/(musicPlayer.getSongNowPlaying().getFramerate()));
         musicPlayer.playSong();
-        PausePlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pause.png")));
+        PausePlay.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/pause.png"))));
     }
 
     private void SliderMouseClicked(java.awt.event.MouseEvent evt) {
@@ -376,17 +369,17 @@ public class Music_interface extends javax.swing.JFrame {
             musicPlayer.NewSongSelected=true;
             musicPlayer.playSong();
             musicPlayer.pausePosition=0;
-            PausePlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pause.png")));
+            PausePlay.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/pause.png"))));
         }
         if (musicPlayer.getSongNowPlaying() != null) {
             jTextArea1.setText(musicPlayer.getSongNowPlaying().getLyrics());
             NameLabel.setText(musicPlayer.getSongNowPlaying().getname());
             ImageLabel.setIcon(musicPlayer.getSongNowPlaying().getIcon());
-            jLabel2.setText(musicPlayer.formatTime(musicPlayer.getSongNowPlaying().getLengthinSeconds()));
+            songTotalTimeLabel.setText(MusicPlayer.formatTime(musicPlayer.getSongNowPlaying().getLengthinSeconds()));
             Slider.setMaximum(musicPlayer.getSongNowPlaying().getmp3file().getFrameCount());
         } else {
             jTextArea1.setText("Sorry, no lyrics available :(");
-            ImageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/play.png")));
+            ImageLabel.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/play.png"))));
         }
     }
 
@@ -438,11 +431,7 @@ public class Music_interface extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Music_interface().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new Music_interface().setVisible(true));
     }
 
 
@@ -462,14 +451,14 @@ public class Music_interface extends javax.swing.JFrame {
     private javax.swing.JLabel Previous;
     public javax.swing.JSlider Slider;
     private javax.swing.JPanel TopPanel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel songTimeLabel;
+    private javax.swing.JLabel songTotalTimeLabel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration
 
-    public void setjLabel1(String value) {
-        jLabel1.setText(value);
+    public void setSongTimeLabel(String value) {
+        songTimeLabel.setText(value);
     }
 
     public void setPausePlayIcon(Icon icon){
