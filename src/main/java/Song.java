@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author Abdul
  */
 
-public class Song {
+public class Song{
     private String name;
     private String path;
     private String artist;
@@ -34,11 +34,26 @@ public class Song {
             File file=new File(path);
             mp3file=new Mp3File(path);
             framerate = (double) mp3file.getFrameCount()/ mp3file.getLengthInSeconds();
-            length=mp3file.getLength();
+            length=mp3file.getFrameCount();
             lengthInSeconds =mp3file.getLengthInSeconds();
             System.out.println(framerate);
             System.out.println(mp3file.getLength());
             name=file.getName().substring(0,file.getName().length()-4);
+            String artistFilePath = "src/main/resources/" + name + "_artist.txt";
+            File artistFile = new File(artistFilePath);
+            if (artistFile.exists()) {
+                // Read artist name from file
+                try (BufferedReader artistReader = new BufferedReader(new FileReader(artistFilePath))) {
+                    artist = artistReader.readLine();
+                }
+            } else {
+                // Call API to get artist's name
+                artist = gla.search(name).getHits().getFirst().getArtist().getName();
+                // Write artist name to file
+                try (BufferedWriter artistWriter = new BufferedWriter(new FileWriter(artistFile))) {
+                    artistWriter.write(artist);
+                }
+            }
             String imagePath="src/main/resources/"+name + "_image.png";
             String lyricsPath="src/main/resources/"+name + "_lyrics.txt";
 
@@ -64,12 +79,11 @@ public class Song {
                     }
                 }
                 if(icon==null) {
-                    icon = imageRetriever.iconRetriever(gla.search(name).getHits().get(0).getImageUrl());
-                    BufferedImage songImage = imageRetriever.bufferedImageRetriever(gla.search(name).getHits().get(0).getImageUrl());
+                    icon = imageRetriever.iconRetriever(gla.search(name).getHits().getFirst().getImageUrl());
+                    BufferedImage songImage = imageRetriever.bufferedImageRetriever(gla.search(name).getHits().getFirst().getImageUrl());
                     File imageOutputFile = null;
                     imageRetriever.imageWriter(imageOutputFile, songImage, name);
                 }
-                artist=gla.search(name).getHits().getFirst().getArtist().getName();
             }
         } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
             Logger.getLogger(Song.class.getName()).log(Level.SEVERE, null, ex);
