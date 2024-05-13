@@ -28,7 +28,7 @@ public class MusicPlayer {
     ArrayList<Song> songs=new ArrayList<>();
     int currentTimeInSec,currentFrame, index=0;
     public String songpath;
-    boolean songFinished,NewSongSelected;
+    boolean songFinished,NewSongSelected,playlistLoaded;
     long timeWhenSongStarts,timeWhenSongPaused,seek;
     FileInputStream inputStream;
     BufferedInputStream bufferedInputStream;
@@ -38,12 +38,13 @@ public class MusicPlayer {
     public MusicPlayer(Music_interface musicInterface)
     {
         this.musicInterface = musicInterface;
-        loadPlaylist("src/main/resources/playlist.dat");
         isPlaying=false;
         NewSongSelected=false;
         songFinished=false;
         playlistIsPlaying=false;
+        playlistLoaded=false;
         currentTimeInSec =0;
+
     }
 
     AdvancedPlayer advancedPlayer;
@@ -102,7 +103,7 @@ public class MusicPlayer {
 
     public void playSong () {
         try {
-
+            songFinished=false;
             if (currentFrame > 0) {
                 if(NewSongSelected){
                     if(!playlistIsPlaying) {
@@ -140,23 +141,27 @@ public class MusicPlayer {
                     }
                 }
                 NewSongSelected=false;
-                if(SongNowPlaying!=null) {
-                    inputStream = new FileInputStream(SongNowPlaying.getpath());
-                    bufferedInputStream = new BufferedInputStream(inputStream);
-                    advancedPlayer = new AdvancedPlayer(bufferedInputStream);
-                    advancedPlayer.setPlayBackListener(playbackListener);
-                    isPlaying = true;
-                    new Thread(() -> {
-                        try {
-                            timeWhenSongStarts=System.currentTimeMillis();
-                            if(advancedPlayer!=null) {
-                                advancedPlayer.play();
+                try {
+                    if (SongNowPlaying != null) {
+                        inputStream = new FileInputStream(SongNowPlaying.getpath());
+                        bufferedInputStream = new BufferedInputStream(inputStream);
+                        advancedPlayer = new AdvancedPlayer(bufferedInputStream);
+                        advancedPlayer.setPlayBackListener(playbackListener);
+                        isPlaying = true;
+                        new Thread(() -> {
+                            try {
+                                timeWhenSongStarts = System.currentTimeMillis();
+                                if (advancedPlayer != null) {
+                                    advancedPlayer.play();
+                                }
+                            } catch (JavaLayerException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JavaLayerException e) {
-                            e.printStackTrace();
-                        }
-                    }).start();
-                    updateSliderPosition();
+                        }).start();
+                        updateSliderPosition();
+                    }
+                }catch(FileNotFoundException e){
+                    e.printStackTrace();
                 }
             }
             playlistFinishCheck();
@@ -310,13 +315,19 @@ public class MusicPlayer {
     }
 
     public void loadPlaylist(String filePath) {
+        playlistLoaded=true;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             songs.clear(); // Clear existing playlist
             while ((line = reader.readLine()) != null) {
-                songs.add(new Song(line.trim()));
+                String songPathTempVariable=line.trim();
+                if(new File(songPathTempVariable).exists()) {
+                    songs.add(new Song(songPathTempVariable));
+                }
             }
             System.out.println("Playlist loaded successfully.");
+            musicInterface.updatePlaylistDisplay();
+
         } catch (IOException e) {
             System.out.println("Error loading playlist: " + e.getMessage());
         }

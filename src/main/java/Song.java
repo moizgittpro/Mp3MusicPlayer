@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class Song{
     private String name;
     private String path;
-    private String artist;
+    private String artist="";
     private long length;
     private long lengthInSeconds;
     private Icon icon;
@@ -48,10 +48,14 @@ public class Song{
                 }
             } else {
                 // Call API to get artist's name
-                artist = gla.search(name).getHits().getFirst().getArtist().getName();
+                if(!gla.search(name).getHits().isEmpty()){
+                    artist = gla.search(name).getHits().getFirst().getArtist().getName();
+                }
                 // Write artist name to file
-                try (BufferedWriter artistWriter = new BufferedWriter(new FileWriter(artistFile))) {
-                    artistWriter.write(artist);
+                if(!artist.isEmpty()) {
+                    try (BufferedWriter artistWriter = new BufferedWriter(new FileWriter(artistFile))) {
+                        artistWriter.write(artist);
+                    }
                 }
             }
             String imagePath="src/main/resources/"+name + "_image.png";
@@ -68,21 +72,29 @@ public class Song{
                 System.out.println("Error reading the file: " + e.getMessage());
             }finally {
                 if(lyrics.isEmpty()){
-                    lyrics=gla.search(name).getHits().getFirst().fetchLyrics();
+                    if(!gla.search(name).getHits().isEmpty()) {
+                        lyrics = gla.search(name).getHits().getFirst().fetchLyrics();
+                    }
                     File lyricsFile = new File("src/main/resources/"+name + "_lyrics.txt");
                     if(!lyricsFile.exists()) {
-                        lyricsFile.createNewFile();
-                        FileWriter fileWriter = new FileWriter(lyricsFile);
-                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                        bufferedWriter.write(lyrics);
-                        bufferedWriter.close();
+                        if(!lyrics.isEmpty()) {
+                            lyricsFile.createNewFile();
+                            FileWriter fileWriter = new FileWriter(lyricsFile);
+                            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                            bufferedWriter.write(lyrics);
+                            bufferedWriter.close();
+                        }
                     }
                 }
                 if(icon==null) {
-                    icon = imageRetriever.iconRetriever(gla.search(name).getHits().getFirst().getImageUrl());
-                    BufferedImage songImage = imageRetriever.bufferedImageRetriever(gla.search(name).getHits().getFirst().getImageUrl());
-                    File imageOutputFile = null;
-                    imageRetriever.imageWriter(imageOutputFile, songImage, name);
+                    if(!gla.search(name).getHits().isEmpty()) {
+                        icon = imageRetriever.iconRetriever(gla.search(name).getHits().getFirst().getImageUrl());
+                        if(icon!=null) {
+                            BufferedImage songImage = imageRetriever.bufferedImageRetriever(gla.search(name).getHits().getFirst().getImageUrl());
+                            File imageOutputFile = new File(imagePath);
+                            imageRetriever.imageWriter(imageOutputFile, songImage, name);
+                        }
+                    }
                 }
             }
         } catch (IOException | UnsupportedTagException | InvalidDataException ex) {

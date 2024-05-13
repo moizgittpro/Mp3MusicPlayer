@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -14,14 +15,23 @@ public class Music_interface extends JFrame {
     JFileChooser filechooser;
     FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 Files", "mp3");
     private final MusicPlayer musicPlayer;
+    Font Geist;
 
     public Music_interface() {
+
+        try {
+            Geist = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/GeistVF.ttf"));
+            System.out.println(Geist.getFontName());
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
         initComponents();
-        musicPlayer = new MusicPlayer(this);
         super.setLocationRelativeTo(null);
         playPlaylist.addActionListener(this::playPlaylistActionPerformed);
         addSong.addActionListener(this::addSongActionPerformed);
         removeSong.addActionListener(this::removeSongActionPerformed);
+        musicPlayer = new MusicPlayer(this);
     }
 
     private void initComponents() {
@@ -59,7 +69,7 @@ public class Music_interface extends JFrame {
         Close.setBackground(new java.awt.Color(173, 239, 209));
         Close.setBorderPainted(false);
         Close.setFocusPainted(false);
-        Close.setFont(new java.awt.Font("Geist", 1, 24));
+        Close.setFont(new java.awt.Font(Geist.getFontName(), 1, 24));
         Close.setForeground(new java.awt.Color(0, 0, 0));
         Close.setText("X");
         Close.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -71,7 +81,7 @@ public class Music_interface extends JFrame {
         Minimize.setBackground(new java.awt.Color(173, 239, 209));
         Minimize.setBorderPainted(false);
         Minimize.setFocusPainted(false);
-        Minimize.setFont(new java.awt.Font("Geist", 1, 24));
+        Minimize.setFont(new java.awt.Font(Geist.getFontName(), 1, 24));
         Minimize.setForeground(new java.awt.Color(0, 0, 0));
         Minimize.setText("_");
         Minimize.setVerticalAlignment(SwingConstants.TOP);
@@ -106,7 +116,7 @@ public class Music_interface extends JFrame {
         BrowseLabel.setBorder(null);
         BrowseLabel.setFocusPainted(false);
         BrowseLabel.setBackground(new java.awt.Color(173, 239, 209));
-        BrowseLabel.setFont(new java.awt.Font("Geist", 0, 24));
+        BrowseLabel.setFont(new Font(Geist.getFontName(),0,24));
         BrowseLabel.setForeground(new java.awt.Color(0, 0, 0));
         BrowseLabel.setText("Play a song");
         BrowseLabel.setToolTipText("");
@@ -123,7 +133,7 @@ public class Music_interface extends JFrame {
         Playlist.setBorder(null);
         Playlist.setFocusPainted(false);
         Playlist.setBackground(new java.awt.Color(173, 239, 209));
-        Playlist.setFont(new java.awt.Font("Geist", 0, 24));
+        Playlist.setFont(new java.awt.Font(Geist.getFontName(), 0, 24));
         Playlist.setForeground(new java.awt.Color(0, 0, 0));
         Playlist.setText("Playlist");
         playlistMenu = new JPopupMenu();
@@ -151,7 +161,7 @@ public class Music_interface extends JFrame {
         LyricsButton.setBorder(null);
         LyricsButton.setFocusPainted(false);
         LyricsButton.setBackground(new java.awt.Color(173, 239, 209));
-        LyricsButton.setFont(new java.awt.Font("Geist", 0, 24));
+        LyricsButton.setFont(new java.awt.Font(Geist.getFontName(), 0, 24));
         LyricsButton.setForeground(new java.awt.Color(0, 0, 0));
         LyricsButton.setText("Lyrics"); // Set button text
         LyricsButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -199,9 +209,9 @@ public class Music_interface extends JFrame {
         BottomPanel.setForeground(new java.awt.Color(156, 156, 210));
 
         ImagePanel.setBackground(new java.awt.Color(173, 239, 209));
+        ImagePanel.setPreferredSize(new Dimension(180,110));
 
         ImageLabel.setBackground(new java.awt.Color(173, 239, 209));
-        ImageLabel.setFont(new java.awt.Font("Geist Dark",0,24));
         ImageLabel.setForeground(new java.awt.Color(0, 0, 0));
         ImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -221,23 +231,29 @@ public class Music_interface extends JFrame {
         );
 
         NamePanel.setBackground(new java.awt.Color(173, 239, 209));
+        NamePanel.setMaximumSize(new Dimension(180,74));
+        NamePanel.setPreferredSize(new Dimension(180,74));
         NameLabel.setBackground(new java.awt.Color(173, 239, 209));
-        NameLabel.setFont(new java.awt.Font("Geist", 1, 18));
+        NameLabel.setFont(new java.awt.Font(Geist.getFontName(), 1, 18));
         NameLabel.setForeground(new java.awt.Color(0, 0, 0));
         NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        NameLabel.setMaximumSize(new Dimension(180,74));
+        NameLabel.setPreferredSize(new Dimension(180,74));
+
 
         GroupLayout NamePanelLayout = new GroupLayout(NamePanel);
         NamePanel.setLayout(NamePanelLayout);
         NamePanelLayout.setHorizontalGroup(
                 NamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(NamePanelLayout.createSequentialGroup()
-                                .addComponent(NameLabel, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                                .addContainerGap())
+                                .addComponent(NameLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         NamePanelLayout.setVerticalGroup(
                 NamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(NameLabel, GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                        .addComponent(NameLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         );
+
 
         Previous.setBorder(null);
         Previous.setFocusPainted(false);
@@ -360,7 +376,7 @@ public class Music_interface extends JFrame {
 
         jTextArea1.setBackground(new java.awt.Color(0, 32, 63));
         jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Geist", 0, 18));
+        jTextArea1.setFont(new java.awt.Font(Geist.getFontName(), 0, 18));
         jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
         jTextArea1.setRows(5);
         jTextArea1.setText("Lyrics");
@@ -422,17 +438,34 @@ public class Music_interface extends JFrame {
         if(musicPlayer.playlistIsPlaying && musicPlayer.index<musicPlayer.songs.size()) {
             musicPlayer.goToNextSong();
             updateGUIWhenSongPlays();
+
         }
     }
 
     private void PlaylistMouseClicked(MouseEvent evt) {
-        jTextArea1.setText("");
-        updatePlaylistDisplay();
+        new Thread(()-> {
+            if(!musicPlayer.playlistLoaded) {
+                jTextArea1.setText("LOADING");
+                musicPlayer.loadPlaylist("src/main/resources/playlist.dat");
+            }
+        }).start();
+            jTextArea1.setText("");
+            if(musicPlayer.playlistLoaded) {
+                updatePlaylistDisplay();
+            }
+
     }
 
     private void playPlaylistActionPerformed(ActionEvent evt) {
         // Code to handle the action when "Play this playlist" is selected
-        musicPlayer.playPlaylist();
+        new Thread(()-> {
+            if(!musicPlayer.playlistLoaded) {
+                jTextArea1.setText("LOADING");
+                musicPlayer.loadPlaylist("src/main/resources/playlist.dat");
+            }
+            musicPlayer.playPlaylist();
+        }).start();
+
     }
 
     private void addSongActionPerformed(ActionEvent evt) {
@@ -623,7 +656,8 @@ public class Music_interface extends JFrame {
     }
 
     public void updatePlaylistDisplay(){
-        if(!musicPlayer.songs.isEmpty()) {
+        if(!musicPlayer.songs.isEmpty() && musicPlayer.playlistLoaded) {
+            jTextArea1.setText("");
             if(songRemoved) {
                 jTextArea1.setText("");
             }
@@ -637,7 +671,7 @@ public class Music_interface extends JFrame {
 
     public void updateGUIWhenSongPlays(){
         if (musicPlayer.getSongNowPlaying() != null) {
-            if(musicPlayer.getSongNowPlaying().getLyrics()!=null) {
+            if(!musicPlayer.getSongNowPlaying().getLyrics().isEmpty()) {
                 setjTextArea1ToLyrics();
             }else {
                 jTextArea1.setText("Sorry, no lyrics available for this song :(");
@@ -645,6 +679,8 @@ public class Music_interface extends JFrame {
             NameLabel.setText(musicPlayer.getSongNowPlaying().getname());
             if(musicPlayer.getSongNowPlaying().getIcon()!=null) {
                 ImageLabel.setIcon(musicPlayer.getSongNowPlaying().getIcon());
+            }else{
+                ImageLabel.setIcon(null);
             }
             songTotalTimeLabel.setText(MusicPlayer.formatTime(musicPlayer.getSongNowPlaying().getLengthinSeconds()));
             Slider.setMaximum(musicPlayer.getSongNowPlaying().getmp3file().getFrameCount());
