@@ -35,6 +35,7 @@ public class MusicPlayer {
     private Song SongNowPlaying;
     private final Music_interface musicInterface;
 
+
     public MusicPlayer(Music_interface musicInterface)
     {
         this.musicInterface = musicInterface;
@@ -135,7 +136,6 @@ public class MusicPlayer {
 
             else{
                 if(NewSongSelected){
-                    System.out.println("NEW SONG SELECTED :)");
                     if(!playlistIsPlaying) {
                         SongNowPlaying = new Song(songpath);
                     }
@@ -223,7 +223,6 @@ public class MusicPlayer {
         SongNowPlaying=songs.get(index);
         NewSongSelected=true;
         if(!songFinished) {
-            System.out.println("INSIDE");
             advancedPlayer.stop();
             advancedPlayer.close();
             advancedPlayer = null;
@@ -261,8 +260,12 @@ public class MusicPlayer {
 
         // If the song doesn't already exist, add it to the playlist
         if (!alreadyExists) {
+            int sizeBefore=songs.size();
             songs.add(new Song(songPath));
             savePlaylist("src/main/resources/playlist.dat");
+            if(playlistIsPlaying &&sizeBefore==songs.size()-1){
+                musicInterface.setNextButton(true);
+            }
         } else {
             System.out.println("Song already exists in the playlist.");
         }
@@ -336,13 +339,21 @@ public class MusicPlayer {
     public void removeASong(String songName){
         if(getSongNowPlaying()!=null && getSongNowPlaying().getname().equals(songName)){
             stopPlaylist();
+
+            musicInterface.setNextButton(false);
+
+        }
+        else if(index==songs.size()-2){
+            musicInterface.setNextButton(false);
+        }
+        else if(songs.size()==2){
+            stopPlaylist();
+            musicInterface.setNextButton(false);
             songs.remove(findSongIndexInSongs(songName));
             savePlaylist("src/main/resources/playlist.dat");
         }
-        else{
-            songs.remove(findSongIndexInSongs(songName));
-            savePlaylist("src/main/resources/playlist.dat");
-        }
+        songs.remove(findSongIndexInSongs(songName));
+        savePlaylist("src/main/resources/playlist.dat");
     }
 
     public int findSongIndexInSongs(String s){

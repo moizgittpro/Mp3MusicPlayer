@@ -36,8 +36,6 @@ public class Song{
             framerate = (double) mp3file.getFrameCount()/ mp3file.getLengthInSeconds();
             length=mp3file.getFrameCount();
             lengthInSeconds =mp3file.getLengthInSeconds();
-            System.out.println(framerate);
-            System.out.println(mp3file.getLength());
             name=file.getName().substring(0,file.getName().length()-4);
             String artistFilePath = "src/main/resources/" + name + "_artist.txt";
             File artistFile = new File(artistFilePath);

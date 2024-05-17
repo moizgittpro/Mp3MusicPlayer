@@ -21,7 +21,6 @@ public class Music_interface extends JFrame {
 
         try {
             Geist = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/GeistVF.ttf"));
-            System.out.println(Geist.getFontName());
         } catch (FontFormatException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -69,7 +68,7 @@ public class Music_interface extends JFrame {
         Close.setBackground(new java.awt.Color(173, 239, 209));
         Close.setBorderPainted(false);
         Close.setFocusPainted(false);
-        Close.setFont(new java.awt.Font(Geist.getFontName(), 1, 24));
+        Close.setFont(new Font(Geist.getFontName(), Font.BOLD, 24));
         Close.setForeground(new java.awt.Color(0, 0, 0));
         Close.setText("X");
         Close.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -81,7 +80,7 @@ public class Music_interface extends JFrame {
         Minimize.setBackground(new java.awt.Color(173, 239, 209));
         Minimize.setBorderPainted(false);
         Minimize.setFocusPainted(false);
-        Minimize.setFont(new java.awt.Font(Geist.getFontName(), 1, 24));
+        Minimize.setFont(new Font(Geist.getFontName(), Font.BOLD, 24));
         Minimize.setForeground(new java.awt.Color(0, 0, 0));
         Minimize.setText("_");
         Minimize.setVerticalAlignment(SwingConstants.TOP);
@@ -116,7 +115,7 @@ public class Music_interface extends JFrame {
         BrowseLabel.setBorder(null);
         BrowseLabel.setFocusPainted(false);
         BrowseLabel.setBackground(new java.awt.Color(173, 239, 209));
-        BrowseLabel.setFont(new Font(Geist.getFontName(),0,24));
+        BrowseLabel.setFont(new Font(Geist.getFontName(),Font.PLAIN,24));
         BrowseLabel.setForeground(new java.awt.Color(0, 0, 0));
         BrowseLabel.setText("Play a song");
         BrowseLabel.setToolTipText("");
@@ -133,7 +132,7 @@ public class Music_interface extends JFrame {
         Playlist.setBorder(null);
         Playlist.setFocusPainted(false);
         Playlist.setBackground(new java.awt.Color(173, 239, 209));
-        Playlist.setFont(new java.awt.Font(Geist.getFontName(), 0, 24));
+        Playlist.setFont(new Font(Geist.getFontName(), Font.PLAIN, 24));
         Playlist.setForeground(new java.awt.Color(0, 0, 0));
         Playlist.setText("Playlist");
         playlistMenu = new JPopupMenu();
@@ -161,7 +160,7 @@ public class Music_interface extends JFrame {
         LyricsButton.setBorder(null);
         LyricsButton.setFocusPainted(false);
         LyricsButton.setBackground(new java.awt.Color(173, 239, 209));
-        LyricsButton.setFont(new java.awt.Font(Geist.getFontName(), 0, 24));
+        LyricsButton.setFont(new Font(Geist.getFontName(), Font.PLAIN, 24));
         LyricsButton.setForeground(new java.awt.Color(0, 0, 0));
         LyricsButton.setText("Lyrics"); // Set button text
         LyricsButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -234,7 +233,7 @@ public class Music_interface extends JFrame {
         NamePanel.setMaximumSize(new Dimension(180,74));
         NamePanel.setPreferredSize(new Dimension(180,74));
         NameLabel.setBackground(new java.awt.Color(173, 239, 209));
-        NameLabel.setFont(new java.awt.Font(Geist.getFontName(), 1, 18));
+        NameLabel.setFont(new Font(Geist.getFontName(), Font.BOLD, 18));
         NameLabel.setForeground(new java.awt.Color(0, 0, 0));
         NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         NameLabel.setMaximumSize(new Dimension(180,74));
@@ -376,7 +375,7 @@ public class Music_interface extends JFrame {
 
         jTextArea1.setBackground(new java.awt.Color(0, 32, 63));
         jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font(Geist.getFontName(), 0, 18));
+        jTextArea1.setFont(new Font(Geist.getFontName(), Font.PLAIN, 18));
         jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
         jTextArea1.setRows(5);
         jTextArea1.setText("Lyrics");
@@ -426,34 +425,39 @@ public class Music_interface extends JFrame {
     }
 
     private void PreviousMouseClicked(MouseEvent evt) {
-        if(musicPlayer.playlistIsPlaying) {
-            musicPlayer.goToPreviousSong();
-            updateGUIWhenSongPlays();
-        }else{
-            musicPlayer.restartSong();
+        if(evt.getButton()==MouseEvent.BUTTON1) {
+            if (musicPlayer.playlistIsPlaying) {
+                musicPlayer.goToPreviousSong();
+                updateGUIWhenSongPlays();
+            } else {
+                musicPlayer.restartSong();
+            }
         }
     }
 
     private void NextMouseClicked(MouseEvent evt){
-        if(musicPlayer.playlistIsPlaying && musicPlayer.index<musicPlayer.songs.size()) {
-            musicPlayer.goToNextSong();
-            updateGUIWhenSongPlays();
+        if(evt.getButton()==MouseEvent.BUTTON1) {
+            if (musicPlayer.playlistIsPlaying && musicPlayer.index < musicPlayer.songs.size()) {
+                musicPlayer.goToNextSong();
+                updateGUIWhenSongPlays();
 
+            }
         }
     }
 
     private void PlaylistMouseClicked(MouseEvent evt) {
-        new Thread(()-> {
-            if(!musicPlayer.playlistLoaded) {
-                jTextArea1.setText("LOADING");
-                musicPlayer.loadPlaylist("src/main/resources/playlist.dat");
-            }
-        }).start();
+        if(evt.getButton()==MouseEvent.BUTTON1) {
+            new Thread(() -> {
+                if (!musicPlayer.playlistLoaded) {
+                    jTextArea1.setText("LOADING");
+                    musicPlayer.loadPlaylist("src/main/resources/playlist.dat");
+                }
+            }).start();
             jTextArea1.setText("");
-            if(musicPlayer.playlistLoaded) {
+            if (musicPlayer.playlistLoaded) {
                 updatePlaylistDisplay();
             }
-
+        }
     }
 
     private void playPlaylistActionPerformed(ActionEvent evt) {
@@ -469,87 +473,113 @@ public class Music_interface extends JFrame {
     }
 
     private void addSongActionPerformed(ActionEvent evt) {
-        // Code to handle the action when "Add a song" is selected
-        AddASong();
-        jTextArea1.setText("");
-        updatePlaylistDisplay();
+        new Thread(()-> {
+            if (!musicPlayer.playlistLoaded) {
+                jTextArea1.setText("LOADING");
+                musicPlayer.loadPlaylist("src/main/resources/playlist.dat");
+            }
+            // Code to handle the action when "Add a song" is selected
+            AddASong();
+            jTextArea1.setText("");
+            updatePlaylistDisplay();
+        }).start();
     }
 
     private void removeSongActionPerformed(ActionEvent evt) {
-        // Create an ArrayList to hold the song names
-        ArrayList<String> songNames = new ArrayList<>();
-        for (Song song : musicPlayer.songs) {
-            songNames.add(song.getname());
-        }
+        new Thread(()-> {
+            if (!musicPlayer.playlistLoaded) {
+                jTextArea1.setText("LOADING");
+                musicPlayer.loadPlaylist("src/main/resources/playlist.dat");
+            }
+            // Create an ArrayList to hold the song names
+            ArrayList<String> songNames = new ArrayList<>();
+            for (Song song : musicPlayer.songs) {
+                songNames.add(song.getname());
+            }
 
-        // Convert the ArrayList to an array
-        String[] songNamesArray = songNames.toArray(new String[0]);
+            // Convert the ArrayList to an array
+            String[] songNamesArray = songNames.toArray(new String[0]);
 
-        // Show a JOptionPane with the song names
-        String selectedSongName = (String) JOptionPane.showInputDialog(
-                null,
-                "Select a song to remove:",
-                "Remove Song",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                songNamesArray,
-                null);
+            // Show a JOptionPane with the song names
+            String selectedSongName = (String) JOptionPane.showInputDialog(
+                    null,
+                    "Select a song to remove:",
+                    "Remove Song",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    songNamesArray,
+                    null);
 
-        // Remove the selected song from the playlist
-        if (selectedSongName != null) {
-            musicPlayer.removeASong(selectedSongName);
-            songRemoved=true;
-            updatePlaylistDisplay();
-            songRemoved=false;
-        }
+            // Remove the selected song from the playlist
+            if (selectedSongName != null) {
+                musicPlayer.removeASong(selectedSongName);
+                songRemoved = true;
+                updatePlaylistDisplay();
+                songRemoved = false;
+            }
+        }).start();
     }
     private void LyricsButtonMouseClicked(MouseEvent evt) {
-        setjTextArea1ToLyrics();
+        if(evt.getButton()==MouseEvent.BUTTON1) {
+            setjTextArea1ToLyrics();
+        }
     }
 
     private void PausePlayMouseClicked(java.awt.event.MouseEvent evt) {
-        if (musicPlayer.isPlaying) {
-            musicPlayer.pauseSong();
-            musicPlayer.isPlaying = false;
-        } else {
-            if(musicPlayer.getSongNowPlaying()!=null) {
-                musicPlayer.playSong();
-                musicPlayer.isPlaying = true;
+        if(evt.getButton()==MouseEvent.BUTTON1) {
+            if (musicPlayer.isPlaying) {
+                musicPlayer.pauseSong();
+                musicPlayer.isPlaying = false;
+            } else {
+                if (musicPlayer.getSongNowPlaying() != null) {
+                    musicPlayer.playSong();
+                    musicPlayer.isPlaying = true;
 
+                }
             }
         }
     }
 
     private void BrowseLabelMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-        musicPlayer.playlistIsPlaying=false;
-        browseAndSelectSong();
+        if(evt.getButton()==MouseEvent.BUTTON1) {
+            // TODO add your handling code here:
+            musicPlayer.playlistIsPlaying = false;
+            browseAndSelectSong();
+        }
     }
 
     private void MinimizeMouseClicked(java.awt.event.MouseEvent evt) {
-        this.setState(Frame.ICONIFIED);
+        if(evt.getButton()==MouseEvent.BUTTON1) {
+            this.setState(Frame.ICONIFIED);
+        }
     }
 
     private void CloseMouseClicked(java.awt.event.MouseEvent evt) {
-        System.exit(0);
+        if(evt.getButton()==MouseEvent.BUTTON1) {
+            System.exit(0);
+        }
     }
 
     private void SliderMousePressed(java.awt.event.MouseEvent evt) {
-        if(musicPlayer.getSongNowPlaying()!=null) {
-            int mouseX = evt.getX();
-            int progressBarVal = (int) Math.round(((double) mouseX / (double) Slider.getWidth()) * Slider.getMaximum());
-            musicPlayer.skipPartOfSong(progressBarVal);
-            if(musicPlayer.isPlaying) {
-                musicPlayer.pauseSong();
+        if(evt.getButton()==MouseEvent.BUTTON1) {
+            if (musicPlayer.getSongNowPlaying() != null) {
+                int mouseX = evt.getX();
+                int progressBarVal = (int) Math.round(((double) mouseX / (double) Slider.getWidth()) * Slider.getMaximum());
+                musicPlayer.skipPartOfSong(progressBarVal);
+                if (musicPlayer.isPlaying) {
+                    musicPlayer.pauseSong();
+                }
+                musicPlayer.timeWhenSongPaused = 0;
             }
-            musicPlayer.timeWhenSongPaused = 0;
         }
     }
 
     private void SliderMouseReleased(java.awt.event.MouseEvent evt) {
-        if(musicPlayer.getSongNowPlaying()!=null) {
-            JSlider source = (JSlider) evt.getSource();
-            musicPlayer.resumeSong(source.getValue());
+        if(evt.getButton()==MouseEvent.BUTTON1) {
+            if (musicPlayer.getSongNowPlaying() != null) {
+                JSlider source = (JSlider) evt.getSource();
+                musicPlayer.resumeSong(source.getValue());
+            }
         }
     }
 
@@ -619,6 +649,8 @@ public class Music_interface extends JFrame {
         if(musicPlayer.getSongNowPlaying()!=null){
             if(!musicPlayer.getSongNowPlaying().getLyrics().isEmpty()){
                 jTextArea1.setText(musicPlayer.getSongNowPlaying().getLyrics());
+            }else{
+                jTextArea1.setText("Sorry, no lyrics available for this song :(");
             }
         }
     }
@@ -658,9 +690,6 @@ public class Music_interface extends JFrame {
     public void updatePlaylistDisplay(){
         if(!musicPlayer.songs.isEmpty() && musicPlayer.playlistLoaded) {
             jTextArea1.setText("");
-            if(songRemoved) {
-                jTextArea1.setText("");
-            }
             for (Song song : musicPlayer.songs) {
                 jTextArea1.append(song.getname() + " by " + song.getartist() + "\n");
             }
