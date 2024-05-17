@@ -314,14 +314,14 @@ public class Music_interface extends JFrame {
         });
 
         songTimeLabel.setBackground(new java.awt.Color(173, 239, 209));
-        songTimeLabel.setFont(new java.awt.Font("Tahoma", 0, 14));
+        songTimeLabel.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 14));
         songTimeLabel.setForeground(new java.awt.Color(0, 0, 0));
         songTimeLabel.setBorder(null);
         songTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         songTimeLabel.setText("0:00");
 
         songTotalTimeLabel.setBackground(new java.awt.Color(173, 239, 209));
-        songTotalTimeLabel.setFont(new java.awt.Font("Tahoma", 0, 14));
+        songTotalTimeLabel.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 14));
         songTotalTimeLabel.setForeground(new java.awt.Color(0, 0, 0));
         songTotalTimeLabel.setBorder(null);
         songTotalTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -513,9 +513,8 @@ public class Music_interface extends JFrame {
             // Remove the selected song from the playlist
             if (selectedSongName != null) {
                 musicPlayer.removeASong(selectedSongName);
-                songRemoved = true;
                 updatePlaylistDisplay();
-                songRemoved = false;
+
             }
         }).start();
     }
@@ -633,7 +632,6 @@ public class Music_interface extends JFrame {
     private JLabel songTotalTimeLabel;
     private JScrollPane jScrollPane1;
     private JTextArea jTextArea1;
-    private Boolean songRemoved=false;
     // End of variables declaration
 
     public void setPausePlayIcon(Icon icon){

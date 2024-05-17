@@ -74,14 +74,11 @@ public class Song{
                         lyrics = gla.search(name).getHits().getFirst().fetchLyrics();
                     }
                     File lyricsFile = new File("src/main/resources/"+name + "_lyrics.txt");
-                    if(!lyricsFile.exists()) {
-                        if(!lyrics.isEmpty()) {
-                            lyricsFile.createNewFile();
+                    if(!lyrics.isEmpty()&&!lyricsFile.createNewFile()) {
                             FileWriter fileWriter = new FileWriter(lyricsFile);
                             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
                             bufferedWriter.write(lyrics);
                             bufferedWriter.close();
-                        }
                     }
                 }
                 if(icon==null) {
