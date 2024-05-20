@@ -691,7 +691,11 @@ public class Music_interface extends JFrame {
         if(!musicPlayer.songs.isEmpty() && musicPlayer.playlistLoaded) {
             jTextArea1.setText("");
             for (Song song : musicPlayer.songs) {
-                jTextArea1.append(song.getname() + " by " + song.getartist() + "\n");
+                if(!song.getartist().isEmpty()) {
+                    jTextArea1.append(song.getname() + " by " + song.getartist() + "\n");
+                }else{
+                    jTextArea1.append(song.getname()+ "\n");
+                }
             }
         }else{
             jTextArea1.setText("No songs added yet :(");

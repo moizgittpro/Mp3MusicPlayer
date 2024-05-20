@@ -28,7 +28,7 @@ public class MusicPlayer {
     ArrayList<Song> songs=new ArrayList<>();
     int currentTimeInSec,currentFrame, index=0;
     public String songpath;
-    boolean songFinished,NewSongSelected,playlistLoaded;
+    Boolean songFinished,NewSongSelected,playlistLoaded;
     long timeWhenSongStarts,timeWhenSongPaused,seek;
     FileInputStream inputStream;
     BufferedInputStream bufferedInputStream;
@@ -53,18 +53,24 @@ public class MusicPlayer {
     public void updateSliderPosition() {
         new Thread(() -> {
             while (isPlaying) {
+                //current time in the song is calculated
                 currentTimeInSec =(int)(timeWhenSongPaused+seek+((System.currentTimeMillis()-timeWhenSongStarts)/1000));
+                //current time and framerate is used to get currentFrame
                 currentFrame =(int) ((double) currentTimeInSec * SongNowPlaying.getFramerate());
+
+                //if song finished then return
                 if(checkForFinish()){
                     return;
                 }
-                musicInterface.setSongTimeLabel(formatTime((currentTimeInSec)));
-                // Update the slider position
+                //Set the time label to the current time of the song
+                SwingUtilities.invokeLater(()->musicInterface.setSongTimeLabel(formatTime((currentTimeInSec))));
+
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                // Update the slider position according to the currentFrame
                 SwingUtilities.invokeLater(() -> musicInterface.setSliderValue(currentFrame));
             }
         }).start();
@@ -73,31 +79,39 @@ public class MusicPlayer {
 
     public boolean checkForFinish(){
         try{
-            if(getSongNowPlaying()!=null){
-                if(currentFrame== getSongNowPlaying().getlength()){
+            if(SongNowPlaying!=null){
+                if(currentFrame== SongNowPlaying.getlength()){
+                    //If song is finished then resetting the variables
                     isPlaying=false;
                     songFinished=true;
                     currentFrame=0;
                     timeWhenSongPaused=0;
                     seek=0;
                     currentTimeInSec =0;
+                    //Setting the pauseplay button to play state
                     musicInterface.setPausePlayIcon((new javax.swing.ImageIcon("src/main/resources/play.png")));
+                    //Setting time to 0:00
                     musicInterface.setSongTimeLabel("0:00");
+                    //Slider goes to beginning
                     musicInterface.setSliderValue(0);
+
+                    //If playlist is playing then if one song has finished then go to next song and update the GUI according to song
                     if(playlistIsPlaying){
                         goToNextSong();
                         SwingUtilities.invokeLater(musicInterface::updateGUIWhenSongPlays);
                     }
+                    //return true because song has finished
                     return true;
                 }
-            }
-            else{
+            }else{
+                //If SongNowPlaying is null then also return true
                 return true;
             }
         }catch(Exception e){
             System.out.println("Exception in checkForFinish method:");
             e.printStackTrace();
         }
+        //song hasn't finished then return false
         return false;
     }
 
@@ -105,11 +119,14 @@ public class MusicPlayer {
     public void playSong () {
         try {
             songFinished=false;
+            //If song was paused at some state other than the beginning and then played then this block runs
             if (currentFrame > 0) {
+                //If a new song was selected and a playlist wasn't playing then play the new song
                 if(NewSongSelected){
                     if(!playlistIsPlaying) {
                         SongNowPlaying = new Song(songpath);
                     }
+                    //Reset some variables
                     currentFrame=0;
                     NewSongSelected=false;
                     seek=0;
@@ -134,6 +151,7 @@ public class MusicPlayer {
                 updateSliderPosition();
             }
 
+            //If song is to be played from beginning
             else{
                 if(NewSongSelected){
                     if(!playlistIsPlaying) {
@@ -167,8 +185,9 @@ public class MusicPlayer {
             playlistFinishCheck();
             if(SongNowPlaying!=null) {
                 SwingUtilities.invokeLater(() -> {
+                    //When song is played enable the slider and set the pauseplay button to pause state
                     musicInterface.enableSlider();
-                    musicInterface.PausePlay.setIcon(new ImageIcon("src/main/resources/pause.png"));
+                    SwingUtilities.invokeLater(()->musicInterface.PausePlay.setIcon(new ImageIcon("src/main/resources/pause.png")));
                 });
             }
         }catch (Exception e) {
@@ -246,9 +265,7 @@ public class MusicPlayer {
         playSong();
     }
 
-    public Song getSongNowPlaying () {
-        return SongNowPlaying;
-    }
+
 
     public void addSongInSongs(String songPath) {
         // Check if the songPath already exists in the playlist
@@ -306,6 +323,12 @@ public class MusicPlayer {
         timeWhenSongStarts=0;
         currentTimeInSec=0;
         seek=0;
+        isPlaying=false;
+        songFinished=true;
+        playlistIsPlaying=false;
+        NewSongSelected=false;
+
+
     }
 
     public void savePlaylist(String filePath) {
@@ -313,6 +336,7 @@ public class MusicPlayer {
             for (Song song : songs) {
                 writer.println(song.getpath());
             }
+            writer.close();
             System.out.println("Playlist saved successfully.");
         } catch (IOException e) {
             System.out.println("Error saving playlist: " + e.getMessage());
@@ -339,25 +363,27 @@ public class MusicPlayer {
     }
 
     public void removeASong(String songName){
-        if(getSongNowPlaying()!=null && getSongNowPlaying().getname().equals(songName)){
+        //if the song now playing is the same as the song the user wants to remove from playlist then stop the playlist
+        if(SongNowPlaying!=null && SongNowPlaying.getname().equals(songName)){
             stopPlaylist();
-
-            musicInterface.setNextButton(false);
-
-        }
-        else if(index==songs.size()-2){
             musicInterface.setNextButton(false);
         }
+        //if the 2nd last song is being played and the user removes the last song then disable the next button
+        else if((index==songs.size()-2) && (songName.equals(songs.getLast().getname()))){
+            musicInterface.setNextButton(false);
+        }
+        //if the playlist only contains 2 songs and the user removes 1 of them then the playlist stops and next button is disabled
         else if(songs.size()==2){
             stopPlaylist();
             musicInterface.setNextButton(false);
-            songs.remove(findSongIndexInSongs(songName));
-            savePlaylist("src/main/resources/playlist.dat");
         }
+        //Remove the specified song and save the playlist
         songs.remove(findSongIndexInSongs(songName));
         savePlaylist("src/main/resources/playlist.dat");
     }
 
+    //Method used to find the index of the song selected by the user to be removed from playlist so the mentioned song can be removed
+    //from songs playlist (user selects name of the song and we find the index corresponding to that song in the songs arraylist and return it)
     public int findSongIndexInSongs(String s){
         for(int i=0;i<songs.size();i++){
             if(s != null) {
@@ -371,7 +397,7 @@ public class MusicPlayer {
 
     public void stopPlaylist(){
         playlistIsPlaying=false;
-        if(getSongNowPlaying()!=null) {
+        if(SongNowPlaying!=null) {
             stopSong();
             SongNowPlaying=null;
             SwingUtilities.invokeLater(musicInterface::updateGUIWhenSongPlays);
@@ -385,5 +411,8 @@ public class MusicPlayer {
         return String.format("%02d:%02d", minutes, seconds);
     }
 
+    public Song getSongNowPlaying() {
+        return SongNowPlaying;
+    }
 }
 
