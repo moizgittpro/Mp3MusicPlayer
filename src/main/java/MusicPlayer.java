@@ -378,6 +378,9 @@ public class MusicPlayer {
             musicInterface.setNextButton(false);
         }
         //Remove the specified song and save the playlist
+        if(index!=0){
+            index--;
+        }
         songs.remove(findSongIndexInSongs(songName));
         savePlaylist("src/main/resources/playlist.dat");
     }
