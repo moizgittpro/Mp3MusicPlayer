@@ -12,7 +12,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Music_interface extends JFrame {
 
-    JFileChooser filechooser;
+    JFileChooser fileChooser;
     FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 Files", "mp3");
     private final MusicPlayer musicPlayer;
     Font Geist;
@@ -26,7 +26,7 @@ public class Music_interface extends JFrame {
         }
 
         initComponents();
-        super.setLocationRelativeTo(null);
+        setLocationRelativeTo(null);
         playPlaylist.addActionListener(this::playPlaylistActionPerformed);
         addSong.addActionListener(this::addSongActionPerformed);
         removeSong.addActionListener(this::removeSongActionPerformed);
@@ -56,36 +56,36 @@ public class Music_interface extends JFrame {
         jTextArea1 = new JTextArea();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         setUndecorated(true);
         setResizable(false);
 
-        MainPanel.setBackground(new java.awt.Color(0, 32, 63));
+        MainPanel.setBackground(new Color(0, 32, 63));
 
-        TopPanel.setBackground(new java.awt.Color(173, 239, 209));
+        TopPanel.setBackground(new Color(173, 239, 209));
 
 
-        Close.setBackground(new java.awt.Color(173, 239, 209));
+        Close.setBackground(new Color(173, 239, 209));
         Close.setBorderPainted(false);
         Close.setFocusPainted(false);
         Close.setFont(new Font(Geist.getFontName(), Font.BOLD, 24));
-        Close.setForeground(new java.awt.Color(0, 0, 0));
+        Close.setForeground(new Color(0, 0, 0));
         Close.setText("X");
-        Close.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        Close.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 CloseMouseClicked(evt);
             }
         });
 
-        Minimize.setBackground(new java.awt.Color(173, 239, 209));
+        Minimize.setBackground(new Color(173, 239, 209));
         Minimize.setBorderPainted(false);
         Minimize.setFocusPainted(false);
         Minimize.setFont(new Font(Geist.getFontName(), Font.BOLD, 24));
-        Minimize.setForeground(new java.awt.Color(0, 0, 0));
+        Minimize.setForeground(new Color(0, 0, 0));
         Minimize.setText("_");
         Minimize.setVerticalAlignment(SwingConstants.TOP);
-        Minimize.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        Minimize.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 MinimizeMouseClicked(evt);
             }
         });
@@ -111,17 +111,17 @@ public class Music_interface extends JFrame {
                                 .addContainerGap(53, Short.MAX_VALUE))
         );
 
-        LeftPanel.setBackground(new java.awt.Color(173, 239, 209));
+        LeftPanel.setBackground(new Color(173, 239, 209));
         BrowseLabel.setBorder(null);
         BrowseLabel.setFocusPainted(false);
-        BrowseLabel.setBackground(new java.awt.Color(173, 239, 209));
+        BrowseLabel.setBackground(new Color(173, 239, 209));
         BrowseLabel.setFont(new Font(Geist.getFontName(),Font.PLAIN,24));
-        BrowseLabel.setForeground(new java.awt.Color(0, 0, 0));
+        BrowseLabel.setForeground(new Color(0, 0, 0));
         BrowseLabel.setText("Play a song");
         BrowseLabel.setToolTipText("");
         BrowseLabel.setOpaque(true);
-        BrowseLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        BrowseLabel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 if(evt.getButton()==MouseEvent.BUTTON1) {
                     BrowseLabelMouseClicked(evt);
                 }
@@ -131,9 +131,9 @@ public class Music_interface extends JFrame {
         Playlist = new JButton();
         Playlist.setBorder(null);
         Playlist.setFocusPainted(false);
-        Playlist.setBackground(new java.awt.Color(173, 239, 209));
+        Playlist.setBackground(new Color(173, 239, 209));
         Playlist.setFont(new Font(Geist.getFontName(), Font.PLAIN, 24));
-        Playlist.setForeground(new java.awt.Color(0, 0, 0));
+        Playlist.setForeground(new Color(0, 0, 0));
         Playlist.setText("Playlist");
         playlistMenu = new JPopupMenu();
         playPlaylist = new JMenuItem("Play this playlist");
@@ -143,12 +143,12 @@ public class Music_interface extends JFrame {
         playlistMenu.add(addSong);
         playlistMenu.add(removeSong);
 
-        Playlist.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        Playlist.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 if(evt.getButton()==MouseEvent.BUTTON1) {
                     PlaylistMouseClicked(evt);
                 }
-                if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+                if (evt.getButton() == MouseEvent.BUTTON3) {
                     playlistMenu.show(Playlist, evt.getX(), evt.getY());
                 }
             }
@@ -159,12 +159,12 @@ public class Music_interface extends JFrame {
         LyricsButton = new JButton();
         LyricsButton.setBorder(null);
         LyricsButton.setFocusPainted(false);
-        LyricsButton.setBackground(new java.awt.Color(173, 239, 209));
+        LyricsButton.setBackground(new Color(173, 239, 209));
         LyricsButton.setFont(new Font(Geist.getFontName(), Font.PLAIN, 24));
-        LyricsButton.setForeground(new java.awt.Color(0, 0, 0));
+        LyricsButton.setForeground(new Color(0, 0, 0));
         LyricsButton.setText("Lyrics"); // Set button text
-        LyricsButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        LyricsButton.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 LyricsButtonMouseClicked(evt);
             }
         });
@@ -204,14 +204,14 @@ public class Music_interface extends JFrame {
 
 
 
-        BottomPanel.setBackground(new java.awt.Color(173, 239, 209));
-        BottomPanel.setForeground(new java.awt.Color(156, 156, 210));
+        BottomPanel.setBackground(new Color(173, 239, 209));
+        BottomPanel.setForeground(new Color(156, 156, 210));
 
-        ImagePanel.setBackground(new java.awt.Color(173, 239, 209));
+        ImagePanel.setBackground(new Color(173, 239, 209));
         ImagePanel.setPreferredSize(new Dimension(180,110));
 
-        ImageLabel.setBackground(new java.awt.Color(173, 239, 209));
-        ImageLabel.setForeground(new java.awt.Color(0, 0, 0));
+        ImageLabel.setBackground(new Color(173, 239, 209));
+        ImageLabel.setForeground(new Color(0, 0, 0));
         ImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         GroupLayout ImagePanelLayout = new GroupLayout(ImagePanel);
@@ -229,12 +229,12 @@ public class Music_interface extends JFrame {
                                 .addContainerGap())
         );
 
-        NamePanel.setBackground(new java.awt.Color(173, 239, 209));
+        NamePanel.setBackground(new Color(173, 239, 209));
         NamePanel.setMaximumSize(new Dimension(180,74));
         NamePanel.setPreferredSize(new Dimension(180,74));
-        NameLabel.setBackground(new java.awt.Color(173, 239, 209));
+        NameLabel.setBackground(new Color(173, 239, 209));
         NameLabel.setFont(new Font(Geist.getFontName(), Font.BOLD, 18));
-        NameLabel.setForeground(new java.awt.Color(0, 0, 0));
+        NameLabel.setForeground(new Color(0, 0, 0));
         NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         NameLabel.setMaximumSize(new Dimension(180,74));
         NameLabel.setPreferredSize(new Dimension(180,74));
@@ -256,10 +256,10 @@ public class Music_interface extends JFrame {
 
         Previous.setBorder(null);
         Previous.setFocusPainted(false);
-        Previous.setBackground(new java.awt.Color(173, 239, 209));
+        Previous.setBackground(new Color(173, 239, 209));
         Previous.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/back.png"))));
-        Previous.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        Previous.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 if(evt.getButton()==MouseEvent.BUTTON1) {
                     PreviousMouseClicked(evt);
                 }
@@ -271,13 +271,13 @@ public class Music_interface extends JFrame {
         PausePlay.setOpaque(false);
         PausePlay.setFocusPainted(false);
         PausePlay.setIcon(new ImageIcon("src/main/resources/play.png"));
-        PausePlay.setBackground(new java.awt.Color(173, 239, 209));
+        PausePlay.setBackground(new Color(173, 239, 209));
         PausePlay.setVerticalAlignment(SwingConstants.CENTER);
         PausePlay.setHorizontalAlignment(SwingConstants.CENTER);
 
 
-        PausePlay.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        PausePlay.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 PausePlayMouseClicked(evt);
             }
         });
@@ -285,7 +285,7 @@ public class Music_interface extends JFrame {
         Next.setEnabled(false);
         Next.setBorder(null);
         Next.setFocusPainted(false);
-        Next.setBackground(new java.awt.Color(173, 239, 209));
+        Next.setBackground(new Color(173, 239, 209));
         Next.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/next.png"))));
         Next.addMouseListener(new MouseAdapter() {
             @Override
@@ -297,32 +297,32 @@ public class Music_interface extends JFrame {
         });
 
         Slider.setEnabled(false);
-        Slider.setBackground(new java.awt.Color(0, 32, 63));
-        Slider.setForeground(new java.awt.Color(173, 239, 209));
+        Slider.setBackground(new Color(0, 32, 63));
+        Slider.setForeground(new Color(173, 239, 209));
         Slider.setValue(0);
-        Slider.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
+        Slider.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
                 if(evt.getButton()==MouseEvent.BUTTON1) {
                     SliderMousePressed(evt);
                 }
             }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
+            public void mouseReleased(MouseEvent evt) {
                 if(evt.getButton()==MouseEvent.BUTTON1) {
                     SliderMouseReleased(evt);
                 }
             }
         });
 
-        songTimeLabel.setBackground(new java.awt.Color(173, 239, 209));
-        songTimeLabel.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 14));
-        songTimeLabel.setForeground(new java.awt.Color(0, 0, 0));
+        songTimeLabel.setBackground(new Color(173, 239, 209));
+        songTimeLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        songTimeLabel.setForeground(new Color(0, 0, 0));
         songTimeLabel.setBorder(null);
         songTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         songTimeLabel.setText("0:00");
 
-        songTotalTimeLabel.setBackground(new java.awt.Color(173, 239, 209));
-        songTotalTimeLabel.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 14));
-        songTotalTimeLabel.setForeground(new java.awt.Color(0, 0, 0));
+        songTotalTimeLabel.setBackground(new Color(173, 239, 209));
+        songTotalTimeLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        songTotalTimeLabel.setForeground(new Color(0, 0, 0));
         songTotalTimeLabel.setBorder(null);
         songTotalTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         songTotalTimeLabel.setText("0:00");
@@ -373,15 +373,15 @@ public class Music_interface extends JFrame {
                                 .addContainerGap())
         );
 
-        jTextArea1.setBackground(new java.awt.Color(0, 32, 63));
+        jTextArea1.setBackground(new Color(0, 32, 63));
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new Font(Geist.getFontName(), Font.PLAIN, 18));
-        jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextArea1.setForeground(new Color(255, 255, 255));
         jTextArea1.setRows(5);
         jTextArea1.setText("Lyrics");
         jTextArea1.setAutoscrolls(false);
-        jTextArea1.setCaretColor(new java.awt.Color(0, 0, 0));
-        jTextArea1.setSelectionColor(new java.awt.Color(255, 255, 255));
+        jTextArea1.setCaretColor(new Color(0, 0, 0));
+        jTextArea1.setSelectionColor(new Color(255, 255, 255));
         DefaultCaret caret = (DefaultCaret)jTextArea1.getCaret();
         caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE); // Prevent auto-scrolling
         caret.setDot(0);
@@ -524,7 +524,7 @@ public class Music_interface extends JFrame {
         }
     }
 
-    private void PausePlayMouseClicked(java.awt.event.MouseEvent evt) {
+    private void PausePlayMouseClicked(MouseEvent evt) {
         if(evt.getButton()==MouseEvent.BUTTON1) {
             if (musicPlayer.isPlaying) {
                 musicPlayer.pauseSong();
@@ -539,7 +539,7 @@ public class Music_interface extends JFrame {
         }
     }
 
-    private void BrowseLabelMouseClicked(java.awt.event.MouseEvent evt) {
+    private void BrowseLabelMouseClicked(MouseEvent evt) {
         if(evt.getButton()==MouseEvent.BUTTON1) {
             // TODO add your handling code here:
             musicPlayer.playlistIsPlaying = false;
@@ -547,19 +547,19 @@ public class Music_interface extends JFrame {
         }
     }
 
-    private void MinimizeMouseClicked(java.awt.event.MouseEvent evt) {
+    private void MinimizeMouseClicked(MouseEvent evt) {
         if(evt.getButton()==MouseEvent.BUTTON1) {
             this.setState(Frame.ICONIFIED);
         }
     }
 
-    private void CloseMouseClicked(java.awt.event.MouseEvent evt) {
+    private void CloseMouseClicked(MouseEvent evt) {
         if(evt.getButton()==MouseEvent.BUTTON1) {
             System.exit(0);
         }
     }
 
-    private void SliderMousePressed(java.awt.event.MouseEvent evt) {
+    private void SliderMousePressed(MouseEvent evt) {
         if(evt.getButton()==MouseEvent.BUTTON1) {
             if (musicPlayer.getSongNowPlaying() != null) {
                 int mouseX = evt.getX();
@@ -573,7 +573,7 @@ public class Music_interface extends JFrame {
         }
     }
 
-    private void SliderMouseReleased(java.awt.event.MouseEvent evt) {
+    private void SliderMouseReleased(MouseEvent evt) {
         if(evt.getButton()==MouseEvent.BUTTON1) {
             if (musicPlayer.getSongNowPlaying() != null) {
                 JSlider source = (JSlider) evt.getSource();
@@ -603,7 +603,7 @@ public class Music_interface extends JFrame {
     }
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new Music_interface().setVisible(true));
+        EventQueue.invokeLater(() -> new Music_interface().setVisible(true));
     }
 
     // Variables declaration - do not modify
@@ -655,16 +655,16 @@ public class Music_interface extends JFrame {
 
     public void browseAndSelectSong(){
         Next.setEnabled(false);
-        filechooser=new JFileChooser();
-        filechooser.setFileFilter(filter);
-        filechooser.setCurrentDirectory(new File("songs/"));
-        int result=filechooser.showOpenDialog(this);
+        fileChooser =new JFileChooser();
+        fileChooser.setFileFilter(filter);
+        fileChooser.setCurrentDirectory(new File("src/main/resources/songs/"));
+        int result= fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             // Get the selected file
             if(musicPlayer.isPlaying){
                 musicPlayer.pauseSong();
             }
-            musicPlayer.songpath= filechooser.getSelectedFile().getPath();
+            musicPlayer.songpath= fileChooser.getSelectedFile().getPath();
             musicPlayer.NewSongSelected=true;
             musicPlayer.playSong();
         }
@@ -672,13 +672,15 @@ public class Music_interface extends JFrame {
     }
 
     public void AddASong(){
-        filechooser=new JFileChooser();
-        filechooser.setFileFilter(filter);
-        filechooser.setCurrentDirectory(new File("songs/"));
-        int result=filechooser.showOpenDialog(this);
+        fileChooser =new JFileChooser();
+        fileChooser.setFileFilter(filter);
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        fileChooser.setCurrentDirectory(new File("songs/"));
+        int result= fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
-            musicPlayer.addSongInSongs(filechooser.getSelectedFile().getPath());
+            musicPlayer.addSongInSongs(fileChooser.getSelectedFile().getPath());
         }
+        setCursor(Cursor.getDefaultCursor());
     }
 
     public void enableSlider(){

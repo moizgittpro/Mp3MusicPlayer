@@ -10,6 +10,8 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class imageRetriever {
+
+    //This function resizes the image so that any image we get from API of any aspect ratio can be resized appropriately so that it can be displayed in GUI
     public static BufferedImage resizeImageByHeight(BufferedImage originalImage, int targetHeight) {
         double aspectRatio = (double) originalImage.getWidth() / originalImage.getHeight();
         int targetWidth = (int) (targetHeight * aspectRatio);
@@ -21,6 +23,7 @@ public class imageRetriever {
         return resizedImage;
     }
 
+    //This function retrieves an icon from a url
     public static Icon iconRetriever(String urlLocation) {
         BufferedImage image1 = null;
         try {
@@ -44,6 +47,7 @@ public class imageRetriever {
         return null;
     }
 
+    //retrieves a bufferedImage from a URL
     public static BufferedImage bufferedImageRetriever(String urlLocation) {
         BufferedImage image1 = null;
         try {
@@ -65,6 +69,7 @@ public class imageRetriever {
         return null;
     }
 
+    //Writes an image to a .png file
     public static void imageWriter(File outputFile,BufferedImage bufferedImage,String name){
         // Write the image to a file
         try {

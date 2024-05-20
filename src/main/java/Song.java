@@ -8,8 +8,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  *
@@ -44,36 +42,47 @@ public class Song{
                 try (BufferedReader artistReader = new BufferedReader(new FileReader(artistFilePath))) {
                     artist = artistReader.readLine();
                 }
-            } else {
+            }
+            //if artist file doesn't exist already then
+            else {
                 // Call API to get artist's name
                 if(!gla.search(name).getHits().isEmpty()){
                     artist = gla.search(name).getHits().getFirst().getArtist().getName();
                 }
-                // Write artist name to file
+                // Write artist name to file if artist variable isn't empty
                 if(!artist.isEmpty()) {
                     try (BufferedWriter artistWriter = new BufferedWriter(new FileWriter(artistFile))) {
                         artistWriter.write(artist);
+                    }catch(IOException e){
+                        System.out.println("Exception while writing to artist file:");
+                        e.printStackTrace();
                     }
                 }
             }
             String imagePath="src/main/resources/"+name + "_image.png";
             String lyricsPath="src/main/resources/"+name + "_lyrics.txt";
 
+            //Try reading from lyrics file line by line and use StringBuilder to append each line to lyrics
             try (BufferedReader reader = new BufferedReader(new FileReader(lyricsPath))) {
                 String line;
+                StringBuilder builder=new StringBuilder();
                 while ((line=reader.readLine())!= null) {
-                    lyrics+=line+"\n";
+                    builder.append(line).append("\n");
                 }
+                lyrics= builder.toString();
                 BufferedImage bufferedImage = ImageIO.read(new File(imagePath));
                 icon = new ImageIcon(bufferedImage);
             } catch (IOException e) {
-                System.out.println("Error reading the file: " + e.getMessage());
+                System.out.println("Error reading the lyrics file: " + e.getMessage());
             }finally {
+                //if lyrics variable is still empty then search for lyrics from API
                 if(lyrics.isEmpty()){
                     if(!gla.search(name).getHits().isEmpty()) {
                         lyrics = gla.search(name).getHits().getFirst().fetchLyrics();
                     }
                     File lyricsFile = new File("src/main/resources/"+name + "_lyrics.txt");
+
+                    //If we got some lyrics from API then write them to lyrics file
                     if(!lyrics.isEmpty()&&!lyricsFile.createNewFile()) {
                             FileWriter fileWriter = new FileWriter(lyricsFile);
                             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -81,9 +90,12 @@ public class Song{
                             bufferedWriter.close();
                     }
                 }
+                //If icon contains nothing
                 if(icon==null) {
+                    //Then search for song icon on API
                     if(!gla.search(name).getHits().isEmpty()) {
                         icon = imageRetriever.iconRetriever(gla.search(name).getHits().getFirst().getImageUrl());
+                        //If we got the song icon from API then write it to an image file using imageRetriever class's imageWriter function
                         if(icon!=null) {
                             BufferedImage songImage = imageRetriever.bufferedImageRetriever(gla.search(name).getHits().getFirst().getImageUrl());
                             File imageOutputFile = new File(imagePath);
@@ -93,7 +105,8 @@ public class Song{
                 }
             }
         } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
-            Logger.getLogger(Song.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Exception in constructor of Song");
+            ex.printStackTrace();
         }
     }
 
