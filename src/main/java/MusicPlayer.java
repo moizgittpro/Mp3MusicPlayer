@@ -189,9 +189,7 @@ public class MusicPlayer {
 
     public void stopSong(){
         try{
-            SwingUtilities.invokeLater(() -> {
-                        musicInterface.PausePlay.setIcon(new javax.swing.ImageIcon("src/main/resources/play.png"));
-            });
+            SwingUtilities.invokeLater(() -> musicInterface.PausePlay.setIcon(new ImageIcon("src/main/resources/play.png")));
             isPlaying=false;
             if (advancedPlayer != null) {
                 advancedPlayer.stop();
@@ -207,9 +205,7 @@ public class MusicPlayer {
     public void skipPartOfSong(int progressBarVal){
         currentFrame=progressBarVal;
         currentTimeInSec+= (int) (currentFrame/ getSongNowPlaying().getFramerate());
-        SwingUtilities.invokeLater(() -> {
-            musicInterface.setSliderValue(currentFrame);
-        });
+        SwingUtilities.invokeLater(() -> musicInterface.setSliderValue(currentFrame));
     }
 
     public void resumeSong(int value){
@@ -288,9 +284,7 @@ public class MusicPlayer {
             playSong();
             SwingUtilities.invokeLater(musicInterface::updateGUIWhenSongPlays);
         }else{
-            SwingUtilities.invokeLater(() -> {
-                musicInterface.setjTextArea1("Please add atleast 2 songs first to play this playlist");
-            });
+            SwingUtilities.invokeLater(() -> musicInterface.setjTextArea1("Please add atleast 2 songs first to play this playlist"));
         }
     }
 

@@ -25,7 +25,7 @@ public class imageRetriever {
 
     //This function retrieves an icon from a url
     public static Icon iconRetriever(String urlLocation) {
-        BufferedImage image1 = null;
+        BufferedImage image1;
         try {
             URL url = new URL(urlLocation);
             URLConnection conn = url.openConnection();
@@ -36,20 +36,19 @@ public class imageRetriever {
             image1=ImageIO.read(urlStream);
             int targetheight=100;
             BufferedImage image=resizeImageByHeight(image1,targetheight);
-            ImageIcon icon=new ImageIcon(image);
 
-            return icon;
+            return new ImageIcon(image);
 
 
         } catch (IOException e) {
-            System.out.println("Something went wrong, sorry:" + e.toString());
+            System.out.println("Something went wrong, sorry:" + e);
         }
         return null;
     }
 
     //retrieves a bufferedImage from a URL
     public static BufferedImage bufferedImageRetriever(String urlLocation) {
-        BufferedImage image1 = null;
+        BufferedImage image1;
         try {
             URL url = new URL(urlLocation);
             URLConnection conn = url.openConnection();
@@ -64,7 +63,7 @@ public class imageRetriever {
 
 
         } catch (IOException e) {
-            System.out.println("Something went wrong, sorry:" + e.toString());
+            System.out.println("Something went wrong, sorry:" + e);
         }
         return null;
     }
