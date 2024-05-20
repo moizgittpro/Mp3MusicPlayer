@@ -224,7 +224,7 @@ public class MusicPlayer {
     public void skipPartOfSong(int progressBarVal){
         currentFrame=progressBarVal;
         currentTimeInSec+= (int) (currentFrame/ getSongNowPlaying().getFramerate());
-        SwingUtilities.invokeLater(() -> musicInterface.setSliderValue(currentFrame));
+
     }
 
     public void resumeSong(int value){

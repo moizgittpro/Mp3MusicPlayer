@@ -24,7 +24,7 @@ public class Music_interface extends JFrame {
         } catch (FontFormatException | IOException e) {
             throw new RuntimeException(e);
         }
-
+        setIconImage(new ImageIcon("src/main/resources/vinyl.png").getImage());
         initComponents();
         setLocationRelativeTo(null);
         playPlaylist.addActionListener(this::playPlaylistActionPerformed);
@@ -565,6 +565,7 @@ public class Music_interface extends JFrame {
                 int mouseX = evt.getX();
                 int progressBarVal = (int) Math.round(((double) mouseX / (double) Slider.getWidth()) * Slider.getMaximum());
                 musicPlayer.skipPartOfSong(progressBarVal);
+                setSliderValue(progressBarVal);
                 if (musicPlayer.isPlaying) {
                     musicPlayer.pauseSong();
                 }
