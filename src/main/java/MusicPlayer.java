@@ -38,7 +38,7 @@ public class MusicPlayer {
 
     boolean NewSongSelected;
     private Song SongNowPlaying;
-    public String songpath="F:/ideaProjects/untitled1/songs/redrum.mp3";
+    public String songpath="";
     private Music_interface musicInterface;
     public MusicPlayer(Music_interface musicInterface)
     {
