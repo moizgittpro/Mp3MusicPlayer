@@ -1,0 +1,1 @@
+An mp3 player integrated with an api to fetch lyrics and images with GUI made in swing. Also includes playlist functionality with local storage of said playlist in files. Images and lyrics of previously played songs are cached for quick retrieval.
